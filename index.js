@@ -2,20 +2,29 @@ const express = require('express')
 const app = express()
 const port = 3000
 const fs = require('fs');
+const csv=require('csvtojson/v2')
 
+//ATTEMPT 1
 // let rawdata = fs.readFileSync('titanic_data.json');
 // let titanic_data = JSON.parse(rawdata);
 // console.log(titanic_data);
 
-let parse = require('csv-parse');
-let csvParser = parse({columns: true}, function (err, records) {
-	console.log(records);
-});
+//ATTEMPT 2
+// let parse = require('csv-parse');
+// let csvParser = parse({columns: true}, function (err, records) {
+// 	console.log(records);
+// });
+// titanic_data=fs.createReadStream(__dirname+'/titanic.csv').pipe(csvParser)
+//     .on('error', error => console.error(error))
+//     .on('data', row => console.log(row))
+//     .on('end', rowCount => console.log(`Parsed ${rowCount} rows`));
 
-titanic_data=fs.createReadStream(__dirname+'/titanic.csv').pipe(csvParser)
-    .on('error', error => console.error(error))
-    .on('data', row => console.log(row))
-    .on('end', rowCount => console.log(`Parsed ${rowCount} rows`));
+//ATTEMPT 3
+let titanic_data
+csv().fromFile('titanic.csv')
+.then((jsonObj)=>{
+    titanic_data = jsonObj;
+})
 
 app.get('/', (req, res) => {
   res.send(titanic_data)
