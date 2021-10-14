@@ -30,54 +30,91 @@ app.get('/', (req, res) => {
   res.send(titanic_data)
 })
 
+
+const genderSearch=(gender)=>{
+    let genderResponse= []
+    
+    console.log(gender)
+    let survived
+    for(let i in titanic_data){
+        console.log(titanic_data[i]['Name'])
+        if (titanic_data[i]['Sex']==gender.toString()){
+            genderResponse.push(titanic_data[i])
+        }
+    }
+    return genderResponse
+}
 app.get('/advancedSearch/:gender', (req, res)=>
 {
-    let genderResponse= []
     let gender = req.params.gender
-    let survived = titanic_data.data.survived
-    for(let i in survived){
-        if (survived[i][1]==gender){
-            newRow = survived[i]
-            newRow.push('survived')
-            genderResponse.push(survived[i])
-        }
-    }
-
-    let didntSurvive = titanic_data.data.did_not_survive
-    for(let i in didntSurvive){
-        if (didntSurvive[i][1]==gender){
-            newRow = didntSurvive[i]
-            newRow.push('did_not_survive')
-            genderResponse.push(newRow)
-        }
-    }
-    res.send(genderResponse)
+    res.send(genderSearch(gender))
 })
 
 app.get('/searchByExactAge/:exactage', (req, res)=>
 {
     let exactAgeResponse= []
     let exactAge = req.params.exactage
-    let survived = titanic_data.data.survived
-    for(let i in survived){
-        if (survived[i][2]==exactAge){
-            newRow = survived[i]
-            newRow.push('survived')
-            exactAgeResponse.push(survived[i])
+    console.log(exactAge)
+    for(let i in titanic_data){
+        //console.log(titanic_data[i]['Age'])
+        if (titanic_data[i]['Age']==parseInt(exactAge)){
+            exactAgeResponse.push(titanic_data[i])
         }
     }
 
-    let didntSurvive = titanic_data.data.did_not_survive
-    for(let i in didntSurvive){
-        if (didntSurvive[i][2]==exactAge){
-            newRow = didntSurvive[i]
-            newRow.push('did_not_survive')
-            exactAgeResponse.push(newRow)
-        }
-    }
     res.send(exactAgeResponse)
 })
 
+app.get('/searchByFirstName/:firstName', (req, res)=>
+{
+    let firstNameResponse= []
+    let firstName = req.params.firstName.toLowerCase()
+    for(let i in titanic_data){
+        //console.log(titanic_data[i]['Name'])
+        dataFirstName = titanic_data[i]['Name'].split(' ')[2].trim().toLowerCase();
+        //dataSName = titanic_data[i]['Name'].split(' ')[3].trim();
+
+        if (firstName==(dataFirstName)){
+            firstNameResponse.push(titanic_data[i])
+        }
+    }
+
+    res.send(firstNameResponse)
+})
+
+app.get('/searchByFirstName/:firstName', (req, res)=>
+{
+    let firstNameResponse= []
+    let firstName = req.params.firstName.toLowerCase()
+    for(let i in titanic_data){
+        //console.log(titanic_data[i]['Name'])
+        dataFirstName = titanic_data[i]['Name'].split(' ')[2].trim().toLowerCase();
+        //dataSName = titanic_data[i]['Name'].split(' ')[3].trim();
+
+        if (firstName==(dataFirstName)){
+            firstNameResponse.push(titanic_data[i])
+        }
+    }
+
+    res.send(firstNameResponse)
+})
+
+app.get('/searchByAgeRange/', (req, res)=>
+{
+    let ageRangeResponse= []
+    let upper =(req.query.upper === undefined) ? 200 : parseInt(req.query.upper)
+    let lower =(req.query.lower === undefined) ? 0 : parseInt(req.query.lower)
+
+    for(let i in titanic_data){
+        const age = titanic_data[i]['Age']
+        //console.log(titanic_data[i]['Name'])
+        if (age>lower&&age<upper){
+            ageRangeResponse.push(titanic_data[i])
+        }
+    }
+
+    res.send(ageRangeResponse)
+})
 
 
 app.listen(port, () => {
