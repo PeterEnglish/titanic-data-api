@@ -4,12 +4,12 @@ const port = 3000
 const fs = require('fs');
 const csv=require('csvtojson/v2')
 
-//ATTEMPT 1
+//ATTEMPT 1 - CSV TO JSON
 // let rawdata = fs.readFileSync('titanic_data.json');
 // let titanic_data = JSON.parse(rawdata);
 // console.log(titanic_data);
 
-//ATTEMPT 2
+//ATTEMPT 2 - CSV TO JSON
 // let parse = require('csv-parse');
 // let csvParser = parse({columns: true}, function (err, records) {
 // 	console.log(records);
@@ -19,7 +19,7 @@ const csv=require('csvtojson/v2')
 //     .on('data', row => console.log(row))
 //     .on('end', rowCount => console.log(`Parsed ${rowCount} rows`));
 
-//ATTEMPT 3
+//ATTEMPT 3 - CSV TO JSON
 let titanic_data
 csv().fromFile('titanic.csv')
 .then((jsonObj)=>{
@@ -35,7 +35,6 @@ const genderSearch=(gender)=>{
     let genderResponse= []
     
     console.log(gender)
-    let survived
     for(let i in titanic_data){
         console.log(titanic_data[i]['Name'])
         if (titanic_data[i]['Sex']==gender.toString()){
@@ -44,6 +43,7 @@ const genderSearch=(gender)=>{
     }
     return genderResponse
 }
+
 app.get('/advancedSearch/:gender', (req, res)=>
 {
     let gender = req.params.gender
@@ -56,7 +56,6 @@ app.get('/searchByExactAge/:exactage', (req, res)=>
     let exactAge = req.params.exactage
     console.log(exactAge)
     for(let i in titanic_data){
-        //console.log(titanic_data[i]['Age'])
         if (titanic_data[i]['Age']==parseInt(exactAge)){
             exactAgeResponse.push(titanic_data[i])
         }
@@ -70,9 +69,8 @@ app.get('/searchByFirstName/:firstName', (req, res)=>
     let firstNameResponse= []
     let firstName = req.params.firstName.toLowerCase()
     for(let i in titanic_data){
-        //console.log(titanic_data[i]['Name'])
-        dataFirstName = titanic_data[i]['Name'].split(' ')[2].trim().toLowerCase();
-        //dataSName = titanic_data[i]['Name'].split(' ')[3].trim();
+       
+        dataFirstName = titanic_data[i]['Name'].split(' ')[2].trim().toLowerCase()
 
         if (firstName==(dataFirstName)){
             firstNameResponse.push(titanic_data[i])
@@ -87,10 +85,7 @@ app.get('/searchByFirstName/:firstName', (req, res)=>
     let firstNameResponse= []
     let firstName = req.params.firstName.toLowerCase()
     for(let i in titanic_data){
-        //console.log(titanic_data[i]['Name'])
         dataFirstName = titanic_data[i]['Name'].split(' ')[2].trim().toLowerCase();
-        //dataSName = titanic_data[i]['Name'].split(' ')[3].trim();
-
         if (firstName==(dataFirstName)){
             firstNameResponse.push(titanic_data[i])
         }
@@ -107,7 +102,6 @@ app.get('/searchByAgeRange/', (req, res)=>
 
     for(let i in titanic_data){
         const age = titanic_data[i]['Age']
-        //console.log(titanic_data[i]['Name'])
         if (age>lower&&age<upper){
             ageRangeResponse.push(titanic_data[i])
         }
